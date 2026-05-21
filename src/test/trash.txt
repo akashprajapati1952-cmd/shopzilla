@@ -1,0 +1,11 @@
+<div className="flex items-center gap-5 ">
+        <Link to="/Cart" onClick={handleShow}>
+          <div className="flex flex-col relative items-center">
+            <CiShoppingCart  className="text-3xl" />
+            <div className="absolute top-1.5 text-sm">{data}</div>
+          </div>
+        </Link>
+        <GiHamburgerMenu onClick={()=>setShowMenu(true)}/>
+        <Navbar showMenu={showMenu} setShowMenu={setShowMenu}/>
+        
+      </div>
