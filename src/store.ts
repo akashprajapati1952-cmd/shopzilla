@@ -3,13 +3,15 @@ import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "./sagas";
 import userReducer from "./reducers/userDetails";
 import productReducer from "./reducers/product";
+import couponReducer from "./reducers/coupons";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store=configureStore ({
     reducer:{
         user: userReducer,
-        products: productReducer
+        products: productReducer,
+        coupon: couponReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
     devTools: import.meta.env.DEV,

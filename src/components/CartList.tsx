@@ -9,7 +9,8 @@ import type { State } from '../store.js';
 import withProducts from '../hocs/withProducts.js';
 import { connect, type ConnectedProps } from 'react-redux';
 import { usernameSelector } from '../selectors/user.js';
-import { updateCartAction } from '../reducers/userDetails.js';
+import { setAxiosErrorAction, updateCartAction } from '../reducers/userDetails.js';
+import { verifyCoupon } from '../actions/action.js';
 
 interface CartListProps {
   removeProduct: (id: number) => void;
@@ -20,13 +21,15 @@ interface CartListProps {
 type Props=CartListProps & redux_props
 
 
-function CartList({cart,user, removeProduct, products,updateCart, loading}: Props) {
+function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,setAlert, loading}: Props) {
   const [subtotal, setSubtotal]=useState(0);
   const [localCart, setLocalCart] = useState<Cart>({});
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const location=useLocation();
+  const [couponCode,setCouponCode]=useState('')
+
   useEffect(() => {
-    
+      setSubtotal(products.map((product)=>(product.price*(cart[product.id] || 0))).reduce((preVal: number,newVal: number)=>(preVal+newVal),0))
+      
       const handleResize = () => {
         setIsMobile(window.innerWidth < 768);
       };
@@ -34,13 +37,18 @@ function CartList({cart,user, removeProduct, products,updateCart, loading}: Prop
       window.addEventListener("resize", handleResize);
   
       return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [cart]);
   
   console.log('CartList rendered');
   function handleUpdateCart(){
     
     updateCart(localCart);
   }
+  function handleVerifyCoupon(){
+    setAlert({code:"", message:"Verifying Coupon, Please wait!",status: 201})
+    verifyCoupon(couponCode,String(subtotal))
+  }
+  
 
   
   if(!products || !cart || loading ){
@@ -68,13 +76,13 @@ function CartList({cart,user, removeProduct, products,updateCart, loading}: Prop
       }  
       <div className=" flex items-start px-2 justify-between   mt-5 ">
         <div className="flex gap-3 flex-col sm:flex-row">
-          <input type="text" placeholder="COUPON CODE" className="border border-gray-500 w-25 p-1 rounded-md text-[10px] text-center"></input>
-          <button type='button' className="bg-red-500 px-2 py-1 w-25 border rounded-md text-[10px]">APPLY COUPON</button>
+          <input type="text" value={couponCode} onChange={(event)=>setCouponCode(event.target.value)} placeholder="COUPON CODE" className="border border-gray-500 w-25 p-1 rounded-md text-[10px] text-center"></input>
+          <button type='button' onClick={handleVerifyCoupon} className="bg-red-500 px-2 py-1 w-25 border rounded-md text-[10px]">APPLY COUPON</button>
         </div>
         <button type='button' onClick={handleUpdateCart} disabled={!localCart} className="bg-red-500 w-25 px-2 py-1 border disabled:bg-red-300  rounded-md text-[10px]">UPDATE CART</button>
       </div>
     </div>
-    <CheckoutDraft subtotal={subtotal} total={subtotal}></CheckoutDraft>
+    <CheckoutDraft subtotal={subtotal} ></CheckoutDraft>
     
   </div>):(<div className="overflow-auto p-5 flex flex-col grow justify-start">
     <div>
@@ -96,13 +104,13 @@ function CartList({cart,user, removeProduct, products,updateCart, loading}: Prop
       }
       <div className="h-10 flex items-center px-2 justify-between border border-gray-300">
         <div className="flex gap-3">
-          <input type="text" placeholder="COUPON CODE" className="border border-gray-500 w-35 p-1 rounded-md text-sm"></input>
-          <button type='button' className="bg-red-500 px-4 py-1 border rounded-md text-sm">APPLY COUPON</button>
+          <input type="text" value={couponCode} onChange={(event)=>setCouponCode(event.target.value)} placeholder="COUPON CODE" className="border border-gray-500 w-35 p-1 rounded-md text-sm"></input>
+          <button type='button' onClick={handleVerifyCoupon} className="bg-red-500 px-4 py-1 border rounded-md text-sm">APPLY COUPON</button>
         </div>
         <button type='button' onClick={handleUpdateCart} disabled={!localCart} className="bg-red-500 px-4 py-1 border disabled:bg-red-300 rounded-md text-sm">UPDATE CART</button>
       </div>
     </div>
-    <CheckoutDraft subtotal={subtotal} total={subtotal}></CheckoutDraft>
+    <CheckoutDraft subtotal={subtotal} ></CheckoutDraft>
   </div>))
 };
 const mapStateToProps=(state: State,ownProps: CartListProps)=>({
@@ -110,7 +118,9 @@ const mapStateToProps=(state: State,ownProps: CartListProps)=>({
   
 })
 const mapDispatchToProps={
-    updateCart:updateCartAction
+    updateCart:updateCartAction,
+    verifyCoupon,
+    setAlert: setAxiosErrorAction
 }
 const connectedComp=connect(mapStateToProps,mapDispatchToProps)
 type redux_props= ConnectedProps<typeof connectedComp>

@@ -11,6 +11,12 @@ export interface Product {
     rating: number;
     brand: string;
 }
+export interface Coupon {
+    code: string;
+    discountType:string;
+    discountValue: number 
+    minCartValue: number
+}
 export type ProductList = Product[];
 
 export type Cart = Record<string, number>;

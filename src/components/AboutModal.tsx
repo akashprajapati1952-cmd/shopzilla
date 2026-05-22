@@ -7,7 +7,7 @@ const AboutModal = () => {
 
   return (
     <div
-      className="flex items-center justify-center w-full  backdrop-blur-sm p-4 overflow-y-auto scroll-smooth"
+      className="flex items-center justify-center w-full grow my-auto backdrop-blur-sm p-4 overflow-y-auto scroll-smooth"
       onClick={() => navigate("/")}
     >
       <div  

@@ -92,3 +92,8 @@ export const verifyOtpForUpdateEmail= async (OTPs:{oldEmailOtp: string; newEmail
   const res=await axios.post(BASE_URL+"/api/user/change-email/verify",{oldEmailOtp,newEmailOtp},{headers:{authorization:`Bearer ${localStorage.getItem("token")}`}})
   return res.data
 }
+
+export const verifyCouponApi=async (data:{code: string, cartTotal: string})=>{
+  const res= await axios.post(BASE_URL+'api/apply-coupon',data,{headers:{authorization:`Bearer ${localStorage.getItem("token")}`}})
+  return res.data
+}
