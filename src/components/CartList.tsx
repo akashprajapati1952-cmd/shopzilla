@@ -46,7 +46,7 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
   }
   function handleVerifyCoupon(){
     setAlert({code:"", message:"Verifying Coupon, Please wait!",status: 201})
-    verifyCoupon(couponCode,String(subtotal))
+    verifyCoupon(couponCode,String(subtotal.toFixed(0)))
   }
   
 

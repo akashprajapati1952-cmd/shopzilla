@@ -28,7 +28,8 @@ function CheckoutDraft({subtotal, coupon}: CheckoutDraftProps) {
       }
     }
     setDiscount(dis)
-  },[coupon])
+  },[coupon,subtotal])
+  console.log(finalTotal)
   
 
   useEffect(()=>{
