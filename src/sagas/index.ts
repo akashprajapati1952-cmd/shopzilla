@@ -1,10 +1,10 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { call, debounce, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { productDetail, dataList, saveCart, userLogin, userRelogin, sendOtp,verifyEmailForSignup, sendOtpForPassword, verifyEmailForPassword, updateUser, sendOtpForUpdateEmail, verifyOtpForUpdateEmail, verifyCouponApi } from "../apis_&_contexts/Api";
+import { productDetail, dataList, saveCart, userLogin, userRelogin, sendOtp,verifyEmailForSignup, sendOtpForPassword, verifyEmailForPassword, updateUser, sendOtpForUpdateEmail, verifyOtpForUpdateEmail, verifyCouponApi, setUserProfile } from "../apis_&_contexts/Api";
 import { loadProductDetailAction, loadProductsAction, setErrorAction, setProductDetailAction, setProductDetailErrorAction, setProductsAction } from "../reducers/product";
 import type { Cart, Coupon } from "../types";
 import { setAxiosErrorAction, setUserAction, setUserLoadingAction, updateCartAction } from "../reducers/userDetails";
-import { USER_LOGIN, USER_RELOGIN, SEND_OTP, VERIFY_EMAIL, SEND_RESET_PASSWORD_OTP, VERIFY_RESET_PASSWORD_OTP, EDIT_PROFILE, EDIT_EMAIL_SEND_OTP, EDIT_EMAIL_VERIFY_OTP, VERIFY_COUPON } from "../actions/action";
+import { USER_LOGIN, USER_RELOGIN, SEND_OTP, VERIFY_EMAIL, SEND_RESET_PASSWORD_OTP, VERIFY_RESET_PASSWORD_OTP, EDIT_PROFILE, EDIT_EMAIL_SEND_OTP, EDIT_EMAIL_VERIFY_OTP, VERIFY_COUPON, SET_USER_IMAGE } from "../actions/action";
 import axios from "axios";
 import { setCouponAction } from "../reducers/coupons";
 
@@ -23,6 +23,7 @@ export function* rootSaga() {
     yield takeEvery(EDIT_EMAIL_SEND_OTP, requestOtpForEmailUpdate)
     yield takeEvery(EDIT_EMAIL_VERIFY_OTP,verifyEmailUpdate)
     yield takeLatest(VERIFY_COUPON,verifyCouponSaga)
+    yield takeEvery(SET_USER_IMAGE,setUserImgSaga)
 }
 
 function* fetch_products(action: PayloadAction<string>): Generator {
@@ -320,4 +321,16 @@ function* verifyCouponSaga(action: PayloadAction<{code: string, cartTotal: strin
   }
   
 }
+
+function* setUserImgSaga(action:  PayloadAction<File>): Generator {
+  try{
+  const data=yield call(setUserProfile,action.payload)
+  console.log(data)
+  yield put(setAxiosErrorAction({code:"success", message:data.message,status: 201}))
+  }catch(error){
+
+  }
+}
+
+
 

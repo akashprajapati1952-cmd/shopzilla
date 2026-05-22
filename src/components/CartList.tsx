@@ -3,7 +3,7 @@ import Loading from './Loading.js';
 import CartProduct1 from './CartProduct1.js';
 import CartProduct2 from './CartProduct2.js';
 import CheckoutDraft from './CheckoutDraft.js';
-import { useLocation} from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import type { Cart, Product} from '../types/index.js';
 import type { State } from '../store.js';
 import withProducts from '../hocs/withProducts.js';
@@ -26,6 +26,7 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
   const [localCart, setLocalCart] = useState<Cart>({});
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [couponCode,setCouponCode]=useState('')
+  const navigate=useNavigate()
   const subttl=useMemo(()=>{
     return products.map((product)=>(product.price*(cart[product.id] || 0))).reduce((preVal: number,newVal: number)=>(preVal+newVal),0)
   },[cart,products])
@@ -54,8 +55,11 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
   
 
   
-  if(!products || !cart || loading ){
+  if( loading ){
     return <Loading>Loading your cart</Loading>
+  }
+  if(!user){
+     navigate('/login')
   }
   
   

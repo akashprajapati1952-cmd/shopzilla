@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import type { State } from "../store";
 
-const userSelector=(state: State)=>state.user;
+export const userSelector=(state: State)=>state.user;
 
 export const cartSelector=createSelector(userSelector,(user)=>user.cart)
 

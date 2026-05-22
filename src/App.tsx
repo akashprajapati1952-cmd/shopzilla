@@ -29,21 +29,13 @@ function App({cart, userlogin, user}: Props){
 
   const updateCart= useUpdateCart()
   const [show, setShow]=useState(true)
-  const [width, setWidth]=useState(window.innerWidth < 768)
+  
   const removeProduct= useRemoveProduct()
   useEffect(()=>{
     if(!user){
       userlogin()
     }
-    const handleResize = () => {
-        setWidth(window.innerWidth < 768);
-    };
-  
-    window.addEventListener("resize", handleResize);
-  
-    return () => window.removeEventListener("resize", handleResize);
-   
-  },[user, window.innerWidth])
+  },[user])
   
   const totleCount=useMemo(function(){
     if(cart){
@@ -51,7 +43,7 @@ function App({cart, userlogin, user}: Props){
         return previous + cart[current]! }, 0))
     }else return 0
   },[cart]);
-  console.log(width)
+
   
   
   return (
@@ -80,7 +72,7 @@ function App({cart, userlogin, user}: Props){
 
           <Route path="/about" element={<AboutModal />}></Route>
 
-          <Route path='/profile' element={user ? <Profile/> : <Login/>}></Route>
+          <Route path='/profile' element={<Profile/>}></Route>
 
           <Route path='/notifications' element={<Notifications/>}></Route>
 
@@ -91,7 +83,7 @@ function App({cart, userlogin, user}: Props){
       </div>
      
 
-      {width  && <Footer/>}
+      <Footer/>
     </div>
   )
 }

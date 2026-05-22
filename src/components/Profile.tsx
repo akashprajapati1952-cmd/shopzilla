@@ -1,26 +1,31 @@
 import { connect, type ConnectedProps } from "react-redux"
 import type { State } from "../store"
-import { userEmailSelector, userLoadingSelector, usernameSelector } from "../selectors/user"
+import {userSelector } from "../selectors/user"
 import Loading from "./Loading"
 import { useEffect, useState } from "react"
 import { FaEdit } from "react-icons/fa";
-import { requestEmailUpdate, requestUpdateUser, verifyEmailUpdateRequest } from "../actions/action"
+import { requestEmailUpdate, requestUpdateUser, setUserImage, verifyEmailUpdateRequest } from "../actions/action"
 import CountDown from "./CountDown"
-import { setAxiosErrorAction, setUserAction, setUserLoadingAction } from "../reducers/userDetails"
+import { setAxiosErrorAction, setUserAction, setUserImageAction } from "../reducers/userDetails"
 import { useNavigate ,Navigate} from "react-router-dom"
 import type { UserProfile } from "../types"
+import { CiCircleRemove } from "react-icons/ci";
 
-function Profile({username, userEmail,loading,setUser, sendOtp, verifyOtp, updateUser, setAlert}:Redux_Props){
-
+function Profile({user,setUser, sendOtp, verifyOtp, updateUser,removeProfile, setAlert, setProfilePic}:Redux_Props){
+    const {username, userEmail, loading, userImage}= user
+    const placeholder="./face.png"
     const [name, setName]=useState(username || '')
     const [localEmail, setLocalEmail]=useState(userEmail || '')
     const [email, setEmail]=useState(userEmail || '')
     const [editingName, setEditingName]=useState(false)
     const [editingEmail, setEditingEmail]=useState(false)
+    const [editingImg, setEditingImg]=useState(false)
     const [oldOtp,setOldOtp]=useState("")
     const [newOtp,setNewOtp]=useState("")
     const [isSent, setIsSent]=useState(false)
     const [isFirst, setIsFirst]= useState(true);
+    const [img, setImg]=useState<File | undefined>(undefined)
+    const navigate=useNavigate()
 
     useEffect(()=>{
       if(!name){
@@ -79,6 +84,10 @@ function Profile({username, userEmail,loading,setUser, sendOtp, verifyOtp, updat
         setEditingName(false)
 
     }
+    function handleImgSave(){
+      setProfilePic(img!)
+      setEditingImg(false)
+    }
     if(loading){
         return <Loading>Loading details, please wait!</Loading>
     }
@@ -90,14 +99,27 @@ function Profile({username, userEmail,loading,setUser, sendOtp, verifyOtp, updat
     return (
       <div className="w-full flex justify-center items-center  ">
     
-        <div className="shadow-2xl rounded-3xl p-6 w-[80%] max-h-[95%] max-w-[300px] mx-auto bg-[#ca2121] flex flex-col overflow-y-auto gap-2">
+        <div className="shadow-2xl rounded-3xl p-6 w-[80%] max-h-[95%] max-w-75 mx-auto bg-[#ca2121] flex flex-col overflow-y-auto gap-2">
       
-          <div className="flex justify-center">
-            <img
-              src="https://i.pravatar.cc/150?img=12"
-              alt="Profile"
-              className="w-20 h-20 rounded-full border-4 border-blue-500 shadow-lg object-cover"
-            />
+          <div className="flex justify-center relative">
+            <div className="relative">
+              <img
+                src={userImage ? userImage : placeholder}
+                alt="Profile"
+                className="w-20 h-20 rounded-full border-4 border-blue-500 shadow-lg object-cover"
+              />
+              <FaEdit onClick={()=>setEditingImg(true)} className="absolute right-2 -bottom-2 -translate-y-1/2 text-gray-500 cursor-pointer" />
+            </div>
+            {editingImg && (<div  className="flex flex-col items-center  absolute z-5 left-0  h-45 gap-1  max-w-75 top-12 w-full  bg-green-600 p-2 boreder rounded-lg">
+              <img src={img ? URL.createObjectURL(img): placeholder} className="w-20 h-20 rounded-full border-4 border-blue-500 shadow-lg object-cover" alt='preview'/>
+              <div className="flex w-[90%] gap-1">
+                <label htmlFor="file" className="text-sm border-2 border-white w-1/2 rounded-md bg-blue-600 font-bold text-center">Choose file</label>
+                <button type="button" onClick={()=>removeProfile('')} className="text-sm border-2 border-white w-1/2 rounded-md bg-blue-600 font-bold text-center">Clear Profile</button>
+              </div>
+              <input id="file" type="file"className="hidden" onChange={(event)=>setImg(event.target.files?.[0])}></input>
+              <button type="button" disabled={!img} className="bg-blue-700 w-full border rounded-md p-1 mt-2 disabled:bg-blue-300"  onClick={()=>{handleImgSave()}}>Save</button>
+              <CiCircleRemove className="absolute top-2 right-2 text-lg" onClick={()=>setEditingImg(false)}/>
+            </div>)}
           </div>
           <div>
             <h1 className="text-xl font-bold text-center  text-gray-800">
@@ -176,9 +198,7 @@ function Profile({username, userEmail,loading,setUser, sendOtp, verifyOtp, updat
 )
 }
 const mapStateToProps=(state: State)=>({
-    username:usernameSelector(state),
-    userEmail: userEmailSelector(state),
-    loading: userLoadingSelector(state)
+    user: userSelector(state)
 })
 
 const mapDispatchToProps={
@@ -186,7 +206,9 @@ const mapDispatchToProps={
     sendOtp:requestEmailUpdate,
     verifyOtp: verifyEmailUpdateRequest,
     updateUser: requestUpdateUser,
-    setUser: setUserAction
+    setUser: setUserAction,
+    setProfilePic: setUserImage,
+    removeProfile: setUserImageAction
 }
 
 const ConnectedComp=connect(mapStateToProps,mapDispatchToProps)

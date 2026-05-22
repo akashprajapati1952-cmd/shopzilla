@@ -9,6 +9,8 @@ export const EDIT_PROFILE="user/editProfile"
 export const EDIT_EMAIL_SEND_OTP='user/editEmailSendOtp'
 export const EDIT_EMAIL_VERIFY_OTP='user/editEmailVerifyOtp'
 export const VERIFY_COUPON='user/cart/verifyCoupon'
+export const SET_USER_IMAGE='user/requestSetUserProfile'
+
 
 export const userLoginAction=(values: {email: string; password: string}): {type:string; payload: {email: string; password: string}}=>{
     return ({
@@ -73,5 +75,12 @@ export const verifyCoupon=(code:string, cartTotal:string)=>{
     return ({
         type: VERIFY_COUPON,
         payload: {code,cartTotal}
+    })
+}
+
+export const setUserImage=(img: File)=>{
+    return ({
+        type: SET_USER_IMAGE,
+        payload: img
     })
 }

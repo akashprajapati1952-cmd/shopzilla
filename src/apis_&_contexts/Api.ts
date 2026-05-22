@@ -39,7 +39,7 @@ export const userLogin=async (values:{email: string; password: string})=>{
 
 export const userRelogin= async ()=>{
   const res=await axios.get("https://my-project-server-6vel.onrender.com/api/user/profile",{headers:{authorization:`Bearer ${localStorage.getItem("token")}`}})
-
+  
   return res.data.user as UserProfile;
 }
 
@@ -95,5 +95,15 @@ export const verifyOtpForUpdateEmail= async (OTPs:{oldEmailOtp: string; newEmail
 
 export const verifyCouponApi=async (data:{code: string, cartTotal: string})=>{
   const res= await axios.post(BASE_URL+'/api/apply-coupon',data,{headers:{authorization:`Bearer ${localStorage.getItem("token")}`}})
+  return res.data
+}
+
+export const setUserProfile= async (img: File)=>{
+  const formData= new FormData()
+  formData.append("profilePic",img)
+  const res= await axios.put(BASE_URL+'/api/user/update-profile-pic',formData,{headers:{
+    'authorization':`Bearer ${localStorage.getItem("token")}`,
+    "Content-Type": "multipart/form-data"
+  }})
   return res.data
 }

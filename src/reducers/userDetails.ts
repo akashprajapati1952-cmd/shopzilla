@@ -1,12 +1,11 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Cart, UserProfile } from "../types";
-import type { AxiosError } from "axios";
-import { boolean } from "yup";
 
 
 export interface User {
     username: string | null;
     userEmail: string | null;
+    userImage: string;
     loading: boolean;
     cart: Record<string, number>;
     error: {message:string; status: number; code: string;} | null;
@@ -18,12 +17,17 @@ const initialState: User={
     username: null,
     userEmail: null,
     loading:true,
+    userImage: '',
     cart: {},
     error:null
 }
 
 const updateCart=(state: User, action: PayloadAction<Cart>)=>{
     state.cart=action.payload
+}
+
+const setUserImage=(state: User, action: PayloadAction<string>)=>{
+    state.userImage=action.payload
 }
 
 const setUser=(state: User, action: PayloadAction<UserProfile>)=>{
@@ -46,11 +50,12 @@ const userSlice= createSlice({
         setUser,
         updateCart,
         setAxiosError,
-        setLoading
+        setLoading,
+        setUserImage
     }
 })
 
 const {actions, reducer: userReducer}= userSlice;
-export const {setUser: setUserAction, updateCart: updateCartAction, setAxiosError: setAxiosErrorAction, setLoading: setUserLoadingAction}= actions;
+export const {setUser: setUserAction, updateCart: updateCartAction, setUserImage: setUserImageAction, setAxiosError: setAxiosErrorAction, setLoading: setUserLoadingAction}= actions;
 
 export default userReducer;
