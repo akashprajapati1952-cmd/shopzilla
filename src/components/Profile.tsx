@@ -6,9 +6,11 @@ import { useEffect, useState } from "react"
 import { FaEdit } from "react-icons/fa";
 import { requestEmailUpdate, requestUpdateUser, verifyEmailUpdateRequest } from "../actions/action"
 import CountDown from "./CountDown"
-import { setAxiosErrorAction, setUserLoadingAction } from "../reducers/userDetails"
+import { setAxiosErrorAction, setUserAction, setUserLoadingAction } from "../reducers/userDetails"
+import { useNavigate } from "react-router-dom"
+import type { UserProfile } from "../types"
 
-function Profile({username, userEmail,loading, sendOtp, verifyOtp, updateUser, setAlert}:Redux_Props){
+function Profile({username, userEmail,loading,setUser, sendOtp, verifyOtp, updateUser, setAlert}:Redux_Props){
 
     const [name, setName]=useState(username || '')
     const [localEmail, setLocalEmail]=useState(userEmail || '')
@@ -19,6 +21,7 @@ function Profile({username, userEmail,loading, sendOtp, verifyOtp, updateUser, s
     const [newOtp,setNewOtp]=useState("")
     const [isSent, setIsSent]=useState(false)
     const [isFirst, setIsFirst]= useState(true);
+    const navigate=useNavigate()
 
     useEffect(()=>{
       if(!name){
@@ -58,7 +61,12 @@ function Profile({username, userEmail,loading, sendOtp, verifyOtp, updateUser, s
     function handleEmailEditing(){
         setEditingEmail(!editingEmail)
     }
-    
+    const handleLogout= () =>{
+        setUser({} as UserProfile)
+        localStorage.removeItem("token")
+        localStorage.removeItem("mycarts")
+        navigate('/');
+    }
     function handleSave(){
         if(username !== name){
           setAlert({code:"warning", message:"Updating User Details",status: 400})
@@ -77,50 +85,53 @@ function Profile({username, userEmail,loading, sendOtp, verifyOtp, updateUser, s
     }
 
     if(!username){
-      return <div className="m-auto text-15 font-extrabold"> You are not logged in!</div>
+      navigate('/login')
     }
   
     return (
-      <div className="w-full flex justify-center items-center py-10 ">
+      <div className="w-full flex justify-center items-center  ">
     
-        <div className="shadow-2xl rounded-3xl p-8 w-full max-w-md mx-auto bg-[#ca2121]">
+        <div className="shadow-2xl rounded-3xl p-6 w-[80%] max-h-[95%] max-w-md mx-auto bg-[#ca2121] flex flex-col overflow-y-auto gap-2">
       
           <div className="flex justify-center">
             <img
               src="https://i.pravatar.cc/150?img=12"
               alt="Profile"
-              className="w-32 h-32 rounded-full border-4 border-blue-500 shadow-lg object-cover"
+              className="w-20 h-20 rounded-full border-4 border-blue-500 shadow-lg object-cover"
             />
           </div>
+          <div>
+            <h1 className="text-xl font-bold text-center  text-gray-800">
+              Welcome {username}
+            </h1>
 
-          <h1 className="text-3xl font-bold text-center mt-4 text-gray-800">
-            Welcome {username}
-          </h1>
-
-          <p className="text-center text-gray-500 mb-8">
-            Your Profile Information
-          </p>
-
-          <div className="mb-5">
-            <label
-              htmlFor="name"
-              className="block text-gray-700 font-semibold mb-2"
-            >
-              Full Name
-            </label>
-            <div className="relative">
-              <input
-                value={name}
-                id="name"
-                readOnly={!editingName}
-                onChange={(event)=>setName(event.target.value)}
-                className="w-full border border-blue-600 rounded-xl px-4 py-3 bg-gray-50"
-              />
-              <FaEdit onClick={handleNameEditing} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer" />
+            <p className="text-center text-gray-500 ">
+              Your Profile Information
+            </p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-gray-700 font-semibold mb-2"
+              >
+                Full Name
+              </label>
+              <div className="relative">
+                <input
+                  value={name}
+                  id="name"
+                  readOnly={!editingName}
+                  onChange={(event)=>setName(event.target.value)}
+                  className="w-full border border-blue-600 rounded-md px-1  bg-gray-50"
+                />
+            
+                <FaEdit onClick={handleNameEditing} className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer" />
+              </div>
             </div>
         
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <div>
                 <label
                   htmlFor="email"
@@ -134,31 +145,32 @@ function Profile({username, userEmail,loading, sendOtp, verifyOtp, updateUser, s
                     id="email"
                     readOnly={!editingEmail}
                     onChange={(event)=>setLocalEmail(event.target.value)}
-                    className="w-full border border-blue-600 rounded-xl px-4 py-3 bg-gray-50"
+                    className="w-full border border-blue-600 rounded-md px-1 bg-gray-50"
                   />
-                  <FaEdit onClick={handleEmailEditing} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer" />
+                  <FaEdit onClick={handleEmailEditing} className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer" />
                 </div>
               </div>
-              {editingEmail && <button disabled={localEmail === userEmail || isSent} onClick={handleSendOtp} type="button" className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition duration-300 disabled:bg-blue-400">
+              {editingEmail && <button disabled={localEmail === userEmail || isSent} onClick={handleSendOtp} type="button" className="w-full  bg-blue-600 hover:bg-blue-700 py-1 text-white font-semibold  rounded-md transition duration-300 disabled:bg-blue-400">
                 <>{isFirst ? "Send OTP" : <div className='flex gap-1.5 justify-center'>Resend OTP {isSent && <CountDown/>}</div>}</>
                 </button>}
               {(!isFirst && editingEmail) && <div>
                 <div>
                   <label htmlFor="oldOtp" className="block text-gray-700 font-semibold mb-2">Enter Registered Email OTP</label>
-                  <input type='number' id="oldOtp" placeholder="This field is required" onChange={(event)=>setOldOtp(event.target.value)} value={oldOtp} className="w-full border border-blue-600 rounded-xl px-4 py-3 bg-gray-50" /> 
+                  <input type='number' id="oldOtp" placeholder="This field is required" onChange={(event)=>setOldOtp(event.target.value)} value={oldOtp} className="w-full border border-blue-600 rounded-md  py-1 bg-gray-50" /> 
                 </div>
                 <div>
                   <label htmlFor="newOtp" className="block text-gray-700 font-semibold mb-2">Enter New Email OTP</label>
-                  <input type='number' id="newOtp" placeholder="This field is required"  onChange={(event)=>setNewOtp(event.target.value)} value={newOtp} className="w-full border border-blue-600 rounded-xl px-4 py-3 bg-gray-50" /> 
+                  <input type='number' id="newOtp" placeholder="This field is required"  onChange={(event)=>setNewOtp(event.target.value)} value={newOtp} className="w-full border border-blue-600 rounded-md py-1 bg-gray-50" /> 
                 </div>
               </div>}
             </div>
 
           </div>
 
-          {(editingEmail || editingName) && <button type="button" disabled={(email === userEmail && name === username)} onClick={handleSave} className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition duration-300 disabled:bg-blue-400">
+          {(editingEmail || editingName) && <button type="button" disabled={(email === userEmail && name === username)} onClick={handleSave} className="w-full  bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 rounded-md transition duration-300 disabled:bg-blue-400">
             Save
           </button>}
+          <button type="button" onClick={handleLogout} className="bg-blue-700 border rounded-md p-1 mt-2 disabled:bg-blue-300">Logout</button>
 
         </div>
       </div>
@@ -174,7 +186,8 @@ const mapDispatchToProps={
     setAlert:setAxiosErrorAction,
     sendOtp:requestEmailUpdate,
     verifyOtp: verifyEmailUpdateRequest,
-    updateUser: requestUpdateUser
+    updateUser: requestUpdateUser,
+    setUser: setUserAction
 }
 
 const ConnectedComp=connect(mapStateToProps,mapDispatchToProps)
@@ -182,3 +195,7 @@ const ConnectedComp=connect(mapStateToProps,mapDispatchToProps)
 type Redux_Props=ConnectedProps<typeof ConnectedComp>
 
 export default ConnectedComp(Profile)
+
+function setUser(arg0: UserProfile) {
+  throw new Error("Function not implemented.")
+}

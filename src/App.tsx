@@ -56,9 +56,9 @@ function App({cart, userlogin, user}: Props){
   
   return (
 
-    <div className="flex flex-col relative bg-white w-full h-dvh py-[8vh]">
-      <Header src="/logo.png" data={totleCount} />
-      <div className="flex grow bg-white ">
+    <div className="flex flex-col relative bg-white w-dvw h-dvh py-16">
+      <Header src="/logo.png" />
+      <div className="flex grow overflow-auto bg-white ">
       <Alert/>
       {show && <Warning onclick={()=>setShow(false)}/>}
         <Routes>

@@ -36,20 +36,9 @@ function Content({products, details, loading,error,params, setSearchParams, load
     
     loadProducts(param)
 
-  }, [param]);
+  }, [skip,limit]);
   
-  function controlSearch(event: React.ChangeEvent<HTMLInputElement>){
-    setSearchParams({sortBy, order, q: event.target.value, limit: String(limit), skip: String(skip)});
-  };
-  function controlSorting(event: React.ChangeEvent<HTMLSelectElement>){
-    let sort;
-    let ord;
-    if(event.target.value =='title'){setSearchParams({...params, sortBy:  'title' , order: 'asc'}); return;}
-    if(event.target.value =='pricelow'){sort='price'; ord='asc';} 
-    else if(event.target.value =='pricehigh'){sort='price'; ord='desc';}
-    else{sort='';}
-    setSearchParams({...params, sortBy:  sort, order: ord!});
-  };
+  
  
 
   if(error){
@@ -59,16 +48,10 @@ function Content({products, details, loading,error,params, setSearchParams, load
   };
   
   
-  return(
-    <div className="relative flex flex-col box-border overflow-auto grow ">
-      <input className="absolute top-3 left-3 sm:top-10 sm:left-10 w-[25%] max-w-40 px-1 border-2 border-gray-500 bg-gray-300 text-[10px] " placeholder="Search"  onChange={controlSearch}></input>
-      <select title='sort' className="absolute top-3 right-3 sm:top-10 sm:right-10 ml-auto w-[25%] max-w-40  px-1 border-2 border-gray-500 bg-gray-300 text-[10px]" onChange={controlSorting} value={sortBy}>
-        <option value="default" >Default sorting</option>
-        <option value="title">Sort by title</option>
-        <option value="pricelow">Sort by price:low to high</option>
-        <option value="pricehigh">Sort by price:high to low</option>
-      </select>
-      { !loading ? (products.length !== 0 ? <div className="grid mx-8 my-15 md:mx-10 md:my-20  place-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 min-w-[calc(100%-80px)] grow ">
+  return ( !loading ? 
+    (<div className="relative flex flex-col box-border overflow-auto grow ">
+      
+      {products.length !== 0 ? <div className="grid mx-3 my-5 md:mx-10 md:my-20  place-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 min-w-[calc(100%-80px)] grow ">
         {products.map(function(product){
           return(<Product pic={product.thumbnail ?? 'https://www.google.com/search?q=product+default+image&sca_esv=fcc86b8bedf6676a&rlz=1C1CHBF_enIN1126IN1126&aep=48&udm=2&prmd=ivns&sxsrf=ANbL-n4CC6FoTMUMM2_fOhY_ebYll9Vpnw:1778816354581&source=lnms&sa=X&ved=2ahUKEwi1wb2nr7qUAxUR6jgGHQvgIqMQ0pQJegQIBhAK&biw=1100&bih=570&dpr=1.31#sv=CAMSVhoyKhBlLWdYblZXMThJRjFJZGVNMg5nWG5WVzE4SUYxSWRlTToOZ25UOThSd2N2T1RlZk0gBCocCgZtb3NhaWMSEGUtZ1huVlcxOElGMUlkZU0YADABGAcg9aLHiA9KCBABGAEgASgB'}
                key={product.id}
@@ -80,8 +63,7 @@ function Content({products, details, loading,error,params, setSearchParams, load
           />
           );
         })}
-      </div>: <div className=" grow text-red-700 self-center pt-[30vh]">Match not found!</div>) : <Loading>Loading products...</Loading>}
-      
+      </div>: <div className=" grow text-red-700 self-center pt-[30vh]">Match not found!</div>}
       <div className="flex gap-1 m-3">
         {[...Array(len).keys()].map((num)=> {
           if(len<6){
@@ -103,8 +85,10 @@ function Content({products, details, loading,error,params, setSearchParams, load
           }
         })}
       </div>
-    </div> 
-  );};
+    </div> ) : <Loading>Loading products...</Loading>
+      
+  );
+};
 const mapStateToProps=(state: State)=>({
     products: productsSelector(state),
     details: responseDetailSelector(state),
