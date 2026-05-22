@@ -7,7 +7,7 @@ import { FaEdit } from "react-icons/fa";
 import { requestEmailUpdate, requestUpdateUser, verifyEmailUpdateRequest } from "../actions/action"
 import CountDown from "./CountDown"
 import { setAxiosErrorAction, setUserAction, setUserLoadingAction } from "../reducers/userDetails"
-import { useNavigate } from "react-router-dom"
+import { useNavigate ,Navigate} from "react-router-dom"
 import type { UserProfile } from "../types"
 
 function Profile({username, userEmail,loading,setUser, sendOtp, verifyOtp, updateUser, setAlert}:Redux_Props){
@@ -21,7 +21,6 @@ function Profile({username, userEmail,loading,setUser, sendOtp, verifyOtp, updat
     const [newOtp,setNewOtp]=useState("")
     const [isSent, setIsSent]=useState(false)
     const [isFirst, setIsFirst]= useState(true);
-    const navigate=useNavigate()
 
     useEffect(()=>{
       if(!name){
@@ -85,13 +84,13 @@ function Profile({username, userEmail,loading,setUser, sendOtp, verifyOtp, updat
     }
 
     if(!username){
-      navigate('/login')
+      return <Navigate to="/login"/>
     }
   
     return (
       <div className="w-full flex justify-center items-center  ">
     
-        <div className="shadow-2xl rounded-3xl p-6 w-[80%] max-h-[95%] max-w-md mx-auto bg-[#ca2121] flex flex-col overflow-y-auto gap-2">
+        <div className="shadow-2xl rounded-3xl p-6 w-[80%] max-h-[95%] max-w-[300px] mx-auto bg-[#ca2121] flex flex-col overflow-y-auto gap-2">
       
           <div className="flex justify-center">
             <img

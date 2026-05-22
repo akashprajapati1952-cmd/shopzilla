@@ -14,7 +14,7 @@ export default class Navbar2 extends Component<Navebar2Props> {
             <Icons Icon={IoHome} heading="Home" path="/"/>
             <Icons Icon={IoCart} heading="Cart" path="/cart"/>
             <Icons Icon={RiAccountCircleFill} heading="Account" path="/profile"/>
-            <Icons Icon={BsInfoCircle} heading="About us" path="about"/>
+            <Icons Icon={BsInfoCircle} heading="About us" path="/about"/>
 
           </div>
         )

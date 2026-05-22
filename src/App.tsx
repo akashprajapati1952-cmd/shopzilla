@@ -58,7 +58,7 @@ function App({cart, userlogin, user}: Props){
 
     <div className="flex flex-col relative bg-white w-dvw h-dvh py-16">
       <Header src="/logo.png" />
-      <div className="flex grow overflow-auto bg-white ">
+      <div className="flex grow overflow-auto bg-white justify-center">
       <Alert/>
       {show && <Warning onclick={()=>setShow(false)}/>}
         <Routes>
@@ -80,7 +80,7 @@ function App({cart, userlogin, user}: Props){
 
           <Route path="/about" element={<AboutModal />}></Route>
 
-          <Route path='/profile' element={<Profile/>}></Route>
+          <Route path='/profile' element={user ? <Profile/> : <Login/>}></Route>
 
           <Route path='/notifications' element={<Notifications/>}></Route>
 

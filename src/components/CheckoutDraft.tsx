@@ -12,30 +12,31 @@ type CheckoutDraftProps ={
 
 function CheckoutDraft({subtotal, coupon}: CheckoutDraftProps) {
   console.log('CheckoutDraft rendered');
-  const [total,setTotal]=useState(subtotal)
   const [discount, setDiscount]=useState(0)
-  console.log(subtotal)
-  const finalTotal=total-discount
+  const finalTotal=subtotal-discount
 
   const  handleDiscount= useCallback(()=>{
     let dis=0
-    if(coupon){
-      let dis=0
+    if(coupon.discountType){
       if(coupon.discountType === "percentage"){
         dis=(subtotal * coupon.discountValue)/100
-      }else{
+      }
+      else{
         dis=coupon.discountValue
+        
       }
     }
+    
+    
     setDiscount(dis)
   },[coupon,subtotal])
-  console.log(finalTotal)
+  
   
 
   useEffect(()=>{
-    setTotal(subtotal)
+    
     handleDiscount()
-  },[subtotal])
+  },[subtotal,coupon])
   
   return <div className="flex flex-col w-62.5 self-center sm:self-end mt-5">
     <p className="border border-gray-300 px-2 py-1 text-start text-sm  font-bold sm:text-md bg-gray-300">Cart totals</p>

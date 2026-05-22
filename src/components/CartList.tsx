@@ -1,4 +1,4 @@
-import  {useState, useEffect, memo, type Dispatch, type SetStateAction} from 'react';
+import  {useState, useEffect, memo,useMemo, type Dispatch, type SetStateAction} from 'react';
 import Loading from './Loading.js';
 import CartProduct1 from './CartProduct1.js';
 import CartProduct2 from './CartProduct2.js';
@@ -26,9 +26,11 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
   const [localCart, setLocalCart] = useState<Cart>({});
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [couponCode,setCouponCode]=useState('')
-
+  const subttl=useMemo(()=>{
+    return products.map((product)=>(product.price*(cart[product.id] || 0))).reduce((preVal: number,newVal: number)=>(preVal+newVal),0)
+  },[cart,products])
   useEffect(() => {
-      setSubtotal(products.map((product)=>(product.price*(cart[product.id] || 0))).reduce((preVal: number,newVal: number)=>(preVal+newVal),0))
+      setSubtotal(subttl)
       
       const handleResize = () => {
         setIsMobile(window.innerWidth < 768);
@@ -37,7 +39,7 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
       window.addEventListener("resize", handleResize);
   
       return () => window.removeEventListener("resize", handleResize);
-  }, [cart]);
+  }, [subttl]);
   
   console.log('CartList rendered');
   function handleUpdateCart(){
@@ -45,9 +47,10 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
     updateCart(localCart);
   }
   function handleVerifyCoupon(){
-    setAlert({code:"", message:"Verifying Coupon, Please wait!",status: 201})
+    setAlert({code:"warning", message:"Verifying Coupon, Please wait!",status: 201})
     verifyCoupon(couponCode,String(subtotal.toFixed(0)))
   }
+
   
 
   
@@ -57,7 +60,7 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
   
   
   if(products.length=== 0 ){
-    return <div className="self-center text-blue-300">Your cart is empty! please add the products first.</div>;
+    return <div className="self-center font-bold text-xl text-blue-600">Your cart is empty! please add the products first.</div>;
   }
   
 

@@ -22,6 +22,7 @@ function Header({src,params, setSearchParams,loadProducts}: HeaderProps) {
   const [width, setWidth]=useState(window.innerWidth > 768)
   const {sortBy='default', order='asc',q='', limit='30', skip='0'}=params;
   const [searchText, setSearchText]=useState(q)
+  const location=useLocation()
   const param = useMemo(() => {
     return new URLSearchParams(params).toString();
     }, [params]);
@@ -59,7 +60,8 @@ function Header({src,params, setSearchParams,loadProducts}: HeaderProps) {
   return(
     <div className="flex fixed  z-5 left-0 top-0  h-16 items-center w-full justify-between px-2 py-5 bg-[#ca2121]">
       <img className="w-25" src={src} alt="_logo"></img>
-      <div className='flex gap-3'>
+      {location.pathname === "/" &&
+      (<div className='flex gap-3'>
       <div className='relative flex items-center'>
         <input className="pl-1 w-25 border border-gray-500 bg-gray-300 text-xs rounded-3xl" placeholder="Search" value={searchText} onChange={(event)=>setSearchText(event?.target.value)}></input>
         <IoSearchSharp className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer" onClick={controlSearch}/>
@@ -70,7 +72,7 @@ function Header({src,params, setSearchParams,loadProducts}: HeaderProps) {
         <option value="pricelow">Sort by price:low to high</option>
         <option value="pricehigh">Sort by price:high to low</option>
       </select>
-      </div>
+      </div>)}
       {width && <Navbar1/>}
       
     </div>
