@@ -6,7 +6,7 @@ import type { Product } from '../types';
 export  interface CartProductProps {
   product: Product
   removeItem: (id: number) => void;
-  setLocalCart: Dispatch<SetStateAction<Record<string, number>>>;
+  setLocalCart: Dispatch<SetStateAction<Record<string, number> | undefined>>;
   cart: Record<string, number>;
 }
 

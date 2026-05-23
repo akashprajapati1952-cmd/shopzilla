@@ -24,7 +24,7 @@ export type Cart = Record<string, number>;
 export interface UserProfile {
   name: string;
   email: string;
-  image?: File ;
+  profilePic?: string ;
   cart: Record<string, number>; 
 }
 

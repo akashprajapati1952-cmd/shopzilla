@@ -23,7 +23,7 @@ type Props=CartListProps & redux_props
 
 function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,setAlert, loading}: Props) {
   const [subtotal, setSubtotal]=useState(0);
-  const [localCart, setLocalCart] = useState<Cart>({});
+  const [localCart, setLocalCart] = useState<Cart | undefined>(undefined);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [couponCode,setCouponCode]=useState('')
   const navigate=useNavigate()
@@ -45,7 +45,8 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
   console.log('CartList rendered');
   function handleUpdateCart(){
     
-    updateCart(localCart);
+    updateCart(localCart!);
+    setLocalCart(undefined)
   }
   function handleVerifyCoupon(){
     setAlert({code:"warning", message:"Verifying Coupon, Please wait!",status: 201})
@@ -84,7 +85,7 @@ function CartList({cart,user,verifyCoupon, removeProduct, products,updateCart,se
       <div className=" flex items-start px-2 justify-between   mt-5 ">
         <div className="flex gap-3 flex-col sm:flex-row">
           <input type="text" value={couponCode} onChange={(event)=>setCouponCode(event.target.value)} placeholder="COUPON CODE" className="border border-gray-500 w-25 p-1 rounded-md text-[10px] text-center"></input>
-          <button type='button' onClick={handleVerifyCoupon} className="bg-red-500 px-2 py-1 w-25 border rounded-md text-[10px]">APPLY COUPON</button>
+          <button type='button' disabled={!couponCode} onClick={handleVerifyCoupon} className="bg-red-500 disabled:bg-red-300 px-2 py-1 w-25 border rounded-md text-[10px]">APPLY COUPON</button>
         </div>
         <button type='button' onClick={handleUpdateCart} disabled={!localCart} className="bg-red-500 w-25 px-2 py-1 border disabled:bg-red-300  rounded-md text-[10px]">UPDATE CART</button>
       </div>

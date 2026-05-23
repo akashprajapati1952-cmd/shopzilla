@@ -12,7 +12,7 @@ import type { UserProfile } from "../types"
 import { CiCircleRemove } from "react-icons/ci";
 
 function Profile({user,setUser, sendOtp, verifyOtp, updateUser,removeProfile, setAlert, setProfilePic}:Redux_Props){
-    const {username, userEmail, loading, userImage}= user
+    const {username, userEmail, loading, profilePic}= user
     const placeholder="./face.png"
     const [name, setName]=useState(username || '')
     const [localEmail, setLocalEmail]=useState(userEmail || '')
@@ -82,6 +82,8 @@ function Profile({user,setUser, sendOtp, verifyOtp, updateUser,removeProfile, se
         }
         setEditingEmail(false)
         setEditingName(false)
+        setName(username!)
+        setLocalEmail(userEmail!)
 
     }
     function handleImgSave(){
@@ -104,7 +106,7 @@ function Profile({user,setUser, sendOtp, verifyOtp, updateUser,removeProfile, se
           <div className="flex justify-center relative">
             <div className="relative">
               <img
-                src={userImage ? userImage : placeholder}
+                src={profilePic ? profilePic : placeholder}
                 alt="Profile"
                 className="w-20 h-20 rounded-full border-4 border-blue-500 shadow-lg object-cover"
               />
@@ -140,7 +142,7 @@ function Profile({user,setUser, sendOtp, verifyOtp, updateUser,removeProfile, se
               </label>
               <div className="relative">
                 <input
-                  value={name}
+                  value={name || ''}
                   id="name"
                   readOnly={!editingName}
                   onChange={(event)=>setName(event.target.value)}
@@ -162,7 +164,7 @@ function Profile({user,setUser, sendOtp, verifyOtp, updateUser,removeProfile, se
                 </label>
                 <div  className="relative ">
                   <input
-                    value={localEmail}
+                    value={localEmail || ''}
                     id="email"
                     readOnly={!editingEmail}
                     onChange={(event)=>setLocalEmail(event.target.value)}
@@ -217,6 +219,4 @@ type Redux_Props=ConnectedProps<typeof ConnectedComp>
 
 export default ConnectedComp(Profile)
 
-function setUser(arg0: UserProfile) {
-  throw new Error("Function not implemented.")
-}
+

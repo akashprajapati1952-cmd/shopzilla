@@ -5,7 +5,7 @@ import type { Cart, UserProfile } from "../types";
 export interface User {
     username: string | null;
     userEmail: string | null;
-    userImage: string;
+    profilePic: string;
     loading: boolean;
     cart: Record<string, number>;
     error: {message:string; status: number; code: string;} | null;
@@ -17,7 +17,7 @@ const initialState: User={
     username: null,
     userEmail: null,
     loading:true,
-    userImage: '',
+    profilePic: '',
     cart: {},
     error:null
 }
@@ -27,12 +27,13 @@ const updateCart=(state: User, action: PayloadAction<Cart>)=>{
 }
 
 const setUserImage=(state: User, action: PayloadAction<string>)=>{
-    state.userImage=action.payload
+    state.profilePic=action.payload
 }
 
 const setUser=(state: User, action: PayloadAction<UserProfile>)=>{
     state.username= action.payload?.name;
     state.userEmail= action.payload?.email;
+    state.profilePic=action.payload.profilePic  || ''
     state.cart= action.payload?.cart;
     state.loading=false
     
