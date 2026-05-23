@@ -1,7 +1,7 @@
 import React, { useState, memo, useMemo } from 'react'
-import { CiShoppingCart } from "react-icons/ci";
+
 import  {Link, useLocation, type SetURLSearchParams} from 'react-router-dom';
-import {GiHamburgerMenu} from 'react-icons/gi'
+
 import Navbar from './Navbar.js';
 import Navbar1 from './Navbar1.js';
 import { loadProductsAction } from '../reducers/product.js';
@@ -16,7 +16,7 @@ type HeaderProps ={
   setSearchParams: SetURLSearchParams;
 } & redux_props
 
-function Header({src,params, setSearchParams,loadProducts}: HeaderProps) {
+function Header({src,params, setSearchParams}: HeaderProps) {
 
 
   const [width, setWidth]=useState(window.innerWidth > 768)
@@ -32,8 +32,8 @@ function Header({src,params, setSearchParams,loadProducts}: HeaderProps) {
   
   
   React.useEffect(()=>{
-
-    loadProducts(param)
+    
+    
     const handleResize = () => {
         setWidth(window.innerWidth > 768);
     };
@@ -41,10 +41,12 @@ function Header({src,params, setSearchParams,loadProducts}: HeaderProps) {
     window.addEventListener("resize", handleResize);
   
     return () => window.removeEventListener("resize", handleResize);
-  },[sortBy,order,q ])
+  },[])
+
 
   function controlSearch(){
     setSearchParams({sortBy, order, q: searchText, limit: String(limit), skip: String(skip)});
+   
   };
   function controlSorting(event: React.ChangeEvent<HTMLSelectElement>){
     let sort;
@@ -79,7 +81,7 @@ function Header({src,params, setSearchParams,loadProducts}: HeaderProps) {
   );
 }
 const mapDispatchToProps={
-    loadProducts:loadProductsAction
+    
 }
 const connectedComp=connect(null,mapDispatchToProps)
 type redux_props= ConnectedProps<typeof connectedComp>

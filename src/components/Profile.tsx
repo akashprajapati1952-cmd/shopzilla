@@ -69,7 +69,7 @@ function Profile({user,setUser, sendOtp, verifyOtp, updateUser,removeProfile, se
         setUser({} as UserProfile)
         localStorage.removeItem("token")
         localStorage.removeItem("mycarts")
-        navigate('/');
+        navigate(-1);
     }
     function handleSave(){
         if(username !== name){

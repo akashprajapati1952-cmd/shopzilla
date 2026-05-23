@@ -12,10 +12,10 @@ export const VERIFY_COUPON='user/cart/verifyCoupon'
 export const SET_USER_IMAGE='user/requestSetUserProfile'
 
 
-export const userLoginAction=(values: {email: string; password: string}): {type:string; payload: {email: string; password: string}}=>{
+export const userLoginAction=(values: {email: string; password: string},onSuccess:()=>void)=>{
     return ({
         type:USER_LOGIN,
-        payload: values
+        payload: {values,onSuccess}
     })
 }
 

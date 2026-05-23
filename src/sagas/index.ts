@@ -56,10 +56,11 @@ function* saveMyCart(action: PayloadAction<Cart>): Generator {
     yield call(saveCart,action.payload)
 }
 
-function* userLoginSaga(action: PayloadAction<{email: string; password: string}>):Generator {
+function* userLoginSaga(action: PayloadAction<{values:{email: string; password: string}, onSuccess:()=>void}>):Generator {
     try{
-      const user=yield call(userLogin,action.payload)
+      const user=yield call(userLogin,action.payload.values)
       yield put(setUserAction(user))
+      action.payload.onSuccess()
       yield put(setAxiosErrorAction({code:"success", message:"Logged in successfully",status: 201}))
    } catch (error){
         yield put(setUserLoadingAction(false))
@@ -68,6 +69,7 @@ function* userLoginSaga(action: PayloadAction<{email: string; password: string}>
             message: error.response?.data?.message || error.message,
             status: error.response?.status || error.status || 401,
             code: error.code || "ERR_BAD_REQUEST"
+
           }));
         } else {
       

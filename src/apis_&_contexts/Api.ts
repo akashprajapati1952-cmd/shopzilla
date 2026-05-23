@@ -1,4 +1,4 @@
-import {useState, useCallback} from 'react';
+
 import axios from 'axios';
 import type { AllData, Cart, Product, UserProfile } from '../types/index.js';
 
@@ -39,7 +39,7 @@ export const userLogin=async (values:{email: string; password: string})=>{
 
 export const userRelogin= async ()=>{
   const res=await axios.get("https://my-project-server-6vel.onrender.com/api/user/profile-details",{headers:{authorization:`Bearer ${localStorage.getItem("token")}`}})
-  console.log(res.data.user)
+  
   return res.data.user as UserProfile;
 }
 

@@ -36,7 +36,7 @@ function Content({products, details, loading,error,params, setSearchParams, load
     
     loadProducts(param)
 
-  }, [skip,limit]);
+  }, [param]);
   
   
  
@@ -51,7 +51,7 @@ function Content({products, details, loading,error,params, setSearchParams, load
   return ( !loading ? 
     (<div className="relative flex flex-col box-border overflow-auto grow ">
       
-      {products.length !== 0 ? <div className="grid mx-3 my-5 md:mx-10 md:my-20  place-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 min-w-[calc(100%-80px)] grow ">
+      {products.length !== 0 ? <div className="grid mx-3 my-5 md:mx-10 md:my-20  place-items-center grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-5 min-w-[calc(100%-80px)] grow ">
         {products.map(function(product){
           return(<Product pic={product.thumbnail ?? 'https://www.google.com/search?q=product+default+image&sca_esv=fcc86b8bedf6676a&rlz=1C1CHBF_enIN1126IN1126&aep=48&udm=2&prmd=ivns&sxsrf=ANbL-n4CC6FoTMUMM2_fOhY_ebYll9Vpnw:1778816354581&source=lnms&sa=X&ved=2ahUKEwi1wb2nr7qUAxUR6jgGHQvgIqMQ0pQJegQIBhAK&biw=1100&bih=570&dpr=1.31#sv=CAMSVhoyKhBlLWdYblZXMThJRjFJZGVNMg5nWG5WVzE4SUYxSWRlTToOZ25UOThSd2N2T1RlZk0gBCocCgZtb3NhaWMSEGUtZ1huVlcxOElGMUlkZU0YADABGAcg9aLHiA9KCBABGAEgASgB'}
                key={product.id}

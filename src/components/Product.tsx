@@ -11,8 +11,8 @@ interface ProductProps {
 
 function Product(data: ProductProps) {
   return(
-    <div className="flex flex-col   w-full max-w-75 gap-1 lg:flex-col lg:max-w-75 self-center [@media(min-width:576px)]:flex-row [@media(min-width:576px)]:gap-5 [@media(min-width:576px)]:max-w-100 ">
-      <img alt='product_img' className="w-full max-w-40 self-center aspect-square bg-gray-300" src={data.pic}></img>
+    <div className="flex flex-col   w-full max-w-75 gap-1 lg:flex-col lg:max-w-75 self-center ">
+      <img alt='product_img' className="  border-0 rounded-lg w-full max-w-40 self-center aspect-square bg-gray-300" src={data.pic}></img>
       <div className='flex flex-col gap-1.5 '>
         <h1 className="text-sm font-bold leading-tight">{data.name} (<span className='text-green-700'>{data.catagory}</span>)</h1>
         <div className="flex h-3 w-4">

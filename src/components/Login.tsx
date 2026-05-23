@@ -1,17 +1,14 @@
-import {useState, useEffect, type Dispatch, type SetStateAction} from 'react';
+import {useState, useEffect} from 'react';
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import {Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Input from './Input.js'
-import axios from 'axios'
-
-import type { Alert, Cart, UserProfile } from '../types/index.js';
-import {setAxiosErrorAction, setUserAction} from '../reducers/userDetails.js'
-import { connect, useDispatch, type ConnectedProps} from 'react-redux';
+import {setAxiosErrorAction} from '../reducers/userDetails.js'
+import { connect, type ConnectedProps} from 'react-redux';
 import type { State } from '../store.js';
-import { usernameSelector } from '../selectors/user.js';
-import { setErrorAction } from '../reducers/product.js';
+import { userSelector } from '../selectors/user.js';
+
 import { userLoginAction } from '../actions/action.js';
 
 interface LoginProps {}
@@ -20,19 +17,17 @@ type Props=LoginProps & redux_props
 function Login({user,setAlert, loadUser}: Props) {
   const navigate=useNavigate();
   console.log('Login rendered');
-  const dispatch=useDispatch()
 
-  const [loading, setLoading]=useState(false);
-  useEffect(() => {
-    if (user) {
-      navigate('/');
+  useEffect(()=>{
+    if(user.userEmail){
+      navigate(-1)
     }
-  }, [user]);
-  
+  },[user])
+
 
   function handleSubmition(values: {email: string, password: string}) {
     setAlert({code:"warning", message:"fetching details, please wait...",status: 201})
-    loadUser(values)
+    loadUser(values,()=>navigate(-1))
   };
   
   
@@ -83,7 +78,7 @@ function Login({user,setAlert, loadUser}: Props) {
   
 };
 const mapStateToProps=(state:State)=>({
-    user: usernameSelector(state)
+    user: userSelector(state)
 })
 const mapDispatchToProps={
   loadUser: userLoginAction,

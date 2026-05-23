@@ -1,6 +1,6 @@
 import React, {useState, useEffect, memo} from 'react';
 import { HiArrowLeft } from "react-icons/hi";
-import {Link} from 'react-router-dom'
+import {Link,  useNavigate} from 'react-router-dom'
 import Loading from './Loading.js'
 import ErrorPage from './ErrorPage.js'
 import { connect, type ConnectedProps } from 'react-redux';
@@ -20,6 +20,7 @@ type ProductdetailProps = ownProps & redux_props
 function Productdetail({updateCart,loadProduct, product, loading, error,productId}: ProductdetailProps) {
 
   const [quant, setquant]=useState(1)
+  const navigate=useNavigate()
 
 
 
@@ -57,7 +58,7 @@ function Productdetail({updateCart,loadProduct, product, loading, error,productI
   
   return(
     <div className="flex grow  m-auto overflow-auto relative max-w-100 sm:max-w-150 bg-white gap-4 flex-col items-center p-5 sm:flex-row sm:h-90">
-      <Link to='/' className ="absolute left-1 top-2 "><HiArrowLeft className="w-10" /></Link>
+      <button title='back' type='button' onClick={()=>navigate(-1)} className ="absolute left-1 top-2 "><HiArrowLeft className="w-10" /></button>
       {thumbnail && <img className="w-[50%] max-w-50 bg-gray-300" src={thumbnail} alt={title} />}
       <div className="flex flex-col p-2 gap-2">
         <h2 className=" text-sm text-gray-500 font-bold">{category}</h2>
