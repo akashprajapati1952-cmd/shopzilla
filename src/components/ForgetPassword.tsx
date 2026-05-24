@@ -9,8 +9,9 @@ import { sendOtpForResetPassword ,verifyOtpForPassword} from '../actions/action'
 import { connect, type ConnectedProps } from 'react-redux';
 import VerifyButton from './VerifyButton';
 import CountDown from './CountDown';
+import { userEmailSelector } from '../selectors/user.js';
 
-function ForgetPassword({sendOtp, verifyOtp, setAlert}:Redux_Props){
+function ForgetPassword({sendOtp, verifyOtp,user, setAlert}:Redux_Props){
   console.log('ForgetPassword rendered');
   const [isFirst, setIsFirst]= useState(true);
   const [otp, setOtp]=useState<string>('')
@@ -30,6 +31,9 @@ function ForgetPassword({sendOtp, verifyOtp, setAlert}:Redux_Props){
         }
       };
     },[isSent])
+  if(user){
+    navigate("/")
+  }
 
   function handleSubmition(values:{email: string; password: string; confirm_password: string}, actions: FormikHelpers<any>){
     setAlert({code:"warning", message:"Verifying OTP, please wait!",status: 201})
@@ -100,7 +104,9 @@ function ForgetPassword({sendOtp, verifyOtp, setAlert}:Redux_Props){
   
   
 };
-const mapStateToProps=(state: State)=>({})
+const mapStateToProps=(state: State)=>({
+  user:userEmailSelector(state)
+})
 
 const mapDispatchToProps={
     setAlert: setAxiosErrorAction,

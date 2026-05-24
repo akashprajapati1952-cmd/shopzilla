@@ -34,7 +34,10 @@ function Signup({setAlert, user, sendSignupOtp,verifyEmail}: Props){
       }
     };
   },[isSent])
-
+  
+  if(user){
+    navigate("/")
+  }
   console.log('signup rendered');
 
   function handleSubmition(values: {full_name: string, email: string, password: string, confirm_password: string}){

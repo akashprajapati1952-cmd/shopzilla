@@ -8,6 +8,7 @@ import { loadProductDetailAction } from '../reducers/product.js';
 import type { State } from '../store.js';
 import { productErrorSelector, productLoadingSelector, productSelector } from '../selectors/product.js';
 import withProductId from '../hocs/withProductId.js';
+import { userEmailSelector } from '../selectors/user.js';
 
 interface ownProps{
   updateCart: (productId: number, quantity: number) => void;
@@ -17,7 +18,7 @@ interface ownProps{
 type ProductdetailProps = ownProps & redux_props
 
 
-function Productdetail({updateCart,loadProduct, product, loading, error,productId}: ProductdetailProps) {
+function Productdetail({updateCart,loadProduct,user, product, loading, error,productId}: ProductdetailProps) {
 
   const [quant, setquant]=useState(1)
   const navigate=useNavigate()
@@ -34,6 +35,9 @@ function Productdetail({updateCart,loadProduct, product, loading, error,productI
     
   }, [productId]);
   function handleClickButton(){
+    if(!user){
+      navigate("/login")
+    }
     updateCart(productId, quant );
   }
   
@@ -82,7 +86,8 @@ function Productdetail({updateCart,loadProduct, product, loading, error,productI
 const mapStateToProps=(state: State, ownProps: ownProps )=>({
   product: productSelector(state, ownProps.productId),
   loading: productLoadingSelector(state,ownProps.productId),
-  error: productErrorSelector(state,ownProps.productId)
+  error: productErrorSelector(state,ownProps.productId),
+  user:userEmailSelector(state)
 
 })
 const mapDispatchToProps={
